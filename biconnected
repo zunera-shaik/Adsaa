@@ -1,0 +1,63 @@
+import java.util.*;
+
+public class Biconnected {
+    static int time = 0;
+    static Stack<String> stack = new Stack<>();
+
+    static void dfs(int u, int parent, List<List<Integer>> adj, boolean[] visited, int[] disc, int[] low) {
+        visited[u] = true;
+        disc[u] = low[u] = ++time;
+        int children = 0;
+
+        for (int v : adj.get(u)) {
+            if (!visited[v]) {
+                children++;
+                stack.push(u + "-" + v);
+                dfs(v, u, adj, visited, disc, low);
+
+                low[u] = Math.min(low[u], low[v]);
+
+                if ((parent == -1 && children > 1) || (parent != -1 && low[v] >= disc[u])) {
+                    System.out.print("Component: ");
+                    String edge;
+                    do {
+                        edge = stack.pop();
+                        System.out.print(edge + " ");
+                    } while (!edge.equals(u + "-" + v));
+                    System.out.println();
+                }
+            } else if (v != parent && disc[v] < disc[u]) {
+                stack.push(u + "-" + v);
+                low[u] = Math.min(low[u], disc[v]);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        int V = 5;
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) adj.add(new ArrayList<>());
+
+        // Sample edges
+        adj.get(0).add(1); adj.get(1).add(0);
+        adj.get(1).add(2); adj.get(2).add(1);
+        adj.get(2).add(0); adj.get(0).add(2);
+        adj.get(1).add(3); adj.get(3).add(1);
+        adj.get(3).add(4); adj.get(4).add(3);
+
+        boolean[] visited = new boolean[V];
+        int[] disc = new int[V];
+        int[] low = new int[V];
+
+        for (int i = 0; i < V; i++) {
+            if (!visited[i])
+                dfs(i, -1, adj, visited, disc, low);
+
+            if (!stack.isEmpty()) {
+                System.out.print("Component: ");
+                while (!stack.isEmpty()) System.out.print(stack.pop() + " ");
+                System.out.println();
+            }
+        }
+    }
+}
