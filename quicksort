@@ -1,46 +1,92 @@
 import java.util.Scanner;
-public class quicksort {
-	public static int partition(int a[],int low,int high) {
-	int pivot=a[low];
-	int i=low+1;
-	int j=high;
-	while(i<=j) {
-		while(i<=j && a[i]<=pivot)
-			i++;
-		while(i<=j && a[j]>=pivot)
-			j--;
-		while(i<j)
-			interchange(a,i,j);
-	}
-	interchange(a,low,j);
-	return j;
-	}
-	public static void interchange(int a[],int i,int j) {
-		int temp=a[i];
-		a[i]=a[j];
-		a[j]=temp;
-	}
-	public static void quicksort(int a[],int low,int high) {
-		if(low<high) {
-			int j=partition(a,low,high);
-			quicksort(a,low,j-1);
-			quicksort(a,j+1,high);
-	}
-}
-	public static void main(String[] args){
-	Scanner sc=new Scanner(System.in);
-		System.out.println("enter the no of elements:");
-		int n=sc.nextInt();
-		int[] array=new int[n];
-		System.out.println("enter the elements:");
-		for(int i=0;i<n;i++){
-			array[i]=sc.nextInt();
-		}
-		quicksort(array,0,array.length-1);
-		System.out.println("sorted array;");
-		for(int num : array){
-			System.out.println(num +" ");
-}
-}
+
+public class QuickSort {
+
+    public static int partition(int[] a, int low, int high) {
+        int pivot = a[low];
+        int i = low + 1;
+        int j = high;
+
+        while (i <= j) {
+            while (i <= j && a[i] <= pivot)
+                i++;
+
+            while (i <= j && a[j] >= pivot)
+                j--;
+
+            if (i < j)
+                interchange(a, i, j);
+        }
+
+        interchange(a, low, j);
+        return j;
+    }
+
+    public static void interchange(int[] a, int i, int j) {
+        int temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
+
+    public static void quickSort(int[] a, int low, int high) {
+        if (low < high) {
+            int j = partition(a, low, high);
+            quickSort(a, low, j - 1);
+            quickSort(a, j + 1, high);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter the number of elements in the array:");
+        int n = scanner.nextInt();
+
+        int[] bestCase = new int[n];
+        int[] worstCase = new int[n];
+        int[] averageCase = new int[n];
+
+        // Best case: already sorted
+        for (int i = 0; i < n; i++) {
+            bestCase[i] = i;
+        }
+
+        // Worst case: reverse sorted
+        for (int i = 0; i < n; i++) {
+            worstCase[i] = n - i;
+        }
+
+        // Average case: user input
+        System.out.println("Enter the elements of the array (for Average Case):");
+        for (int i = 0; i < n; i++) {
+            averageCase[i] = scanner.nextInt();
+        }
+
+        // Measure Best Case
+        long start = System.nanoTime();
+        quickSort(bestCase, 0, bestCase.length - 1);
+        long end = System.nanoTime();
+        System.out.println("Best Case Time: " + (end - start) + " ns");
+
+        // Measure Worst Case
+        start = System.nanoTime();
+        quickSort(worstCase, 0, worstCase.length - 1);
+        end = System.nanoTime();
+        System.out.println("Worst Case Time: " + (end - start) + " ns");
+
+        // Measure Average Case
+        start = System.nanoTime();
+        quickSort(averageCase, 0, averageCase.length - 1);
+        end = System.nanoTime();
+        System.out.println("Average Case Time: " + (end - start) + " ns");
+
+        // Print Sorted Array (Average Case)
+        System.out.println("Sorted Array:");
+        for (int num : averageCase) {
+            System.out.print(num + " ");
+        }
+
+        scanner.close();
+    }
 }
 	
