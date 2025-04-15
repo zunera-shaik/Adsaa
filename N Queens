@@ -25,7 +25,7 @@ public class NQueens {
  java.util.Scanner scanner = new java.util.Scanner(System.in);
  System.out.print("Enter number of queens: ");
  int n = scanner.nextInt();
-scanner.close()
+scanner.close();
 x = new int[n + 1];
  nqueens(1, n);
  }
