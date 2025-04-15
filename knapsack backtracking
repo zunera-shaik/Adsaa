@@ -1,0 +1,48 @@
+import java.util.Scanner;
+
+public class KnapsackBacktracking {
+    static int maxProfit = 0;
+    static int[] bestSelection;
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter number of Objects:");
+        int n = sc.nextInt();
+
+        int[] p = {1, 2, 5, 6}; // profits
+        int[] w = {2, 3, 4, 5}; // weights
+        int m = 8;              // capacity
+
+        bestSelection = new int[n];
+        int[] selected = new int[n]; // temporary array to track current selection
+
+        knapsack(w, p, selected, 0, 0, 0, m);
+
+        // Show final selection
+        for (int i = 0; i < n; i++) {
+            System.out.println("index " + (i + 1) + " " + bestSelection[i]);
+        }
+
+        System.out.println("Maximum profit: " + maxProfit);
+    }
+
+    public static void knapsack(int[] w, int[] p, int[] selected, int i, int currWeight, int currProfit, int capacity) {
+        if (i == w.length) {
+            if (currProfit > maxProfit) {
+                maxProfit = currProfit;
+                bestSelection = selected.clone(); // store current best selection
+            }
+            return;
+        }
+
+        // Try excluding the current item
+        selected[i] = 0;
+        knapsack(w, p, selected, i + 1, currWeight, currProfit, capacity);
+
+        // Try including the current item if weight allows
+        if (currWeight + w[i] <= capacity) {
+            selected[i] = 1;
+            knapsack(w, p, selected, i + 1, currWeight + w[i], currProfit + p[i], capacity);
+        }
+    }
+}
