@@ -1,81 +1,146 @@
 import java.util.Arrays;
-import java.util.Scanner;
-class maxheap{
-	int[] arr;
-	int maxsize,heapsize;
-	maxheap(int maxsize) {
-		this.maxsize=maxsize;
-		heapsize=0;
-		arr = new int[maxsize];
-}
-int parent(int i) {
-	return (i-1)/2;
-}
-int lchild(int i) {
-	return 2*i+1;
-}
-int rchild(int i) {
-	return 2*i+2;
-}
-void maxheapify(int i) {
-	int l=lchild(i);
-	int r=rchild(i);
-	int largest=i;
-	if(l<heapsize && arr[l]>arr[i]) 
-		largest=l;
-	if(r<heapsize && arr[r]>arr[largest])
-		largest=r;
-	if(largest!=i) {
-		int temp=arr[i];
-		arr[i]=arr[largest];
-		arr[largest]=temp;
-		maxheapify(largest);
-	}
-}
-void removemax() {
-	if(heapsize<=0)
-		System.out.println("heap is empty:");
-	if(heapsize==0)
-		heapsize--;
-	else {
-		arr[0]=arr[heapsize-1];
-		heapsize--;
-		maxheapify(0);
-	}
-}
-int getmax() {
-	return arr[0];
-}
-int cursize() {
-	return heapsize;
-}
-void insertkey(int x){
-	if(heapsize==maxsize) {
-		System.out.println("could not insert key:");
-	return;
-	}
-	int i=heapsize;
-	arr[i]=x;
-	heapsize++;
-while(i!=0 && arr[parent(i)]<arr[i]) {
-	int temp=arr[i];
-	arr[i]=arr[parent(i)];
-	i=parent(i);
-}
-}
-public static void main(String[] args) {
-	maxheap h=new maxheap(15);
-	int elements[]={3,10,12,8,2,14};
-	for(int e:elements)
-		h.insertkey(e);
-System.out.println("The current size of the heap is " + h.cursize());
- System.out.println("The current maximum element is " + h.getmax());
- h.removemax();
- System.out.println("The current size of the heap is " + h.cursize());
-// Inserting 2 new keys into the heap.
- h.insertkey(15);
- h.insertkey(5);
- System.out.println("The current size of the heap is " + h.cursize());
- System.out.println("The current maximum element is " + h.getmax());
- }
+
+class MaxHeap {
+    int[] arr;
+    int maxSize, heapSize;
+
+    MaxHeap(int maxSize){
+        this.maxSize = maxSize;
+        heapSize = 0;
+        arr = new int[maxSize];
+    }
+
+    int parent(int i){
+        return (i-1)/2;
+    }
+
+    int lChild(int i){
+        return 2*i + 1;
+    }
+
+    int rChild(int i){
+        return 2*i + 2;
+    }
+
+    void MaxHeapify(int i) {
+        int l = lChild(i);
+        int r = rChild(i);
+        int largest = i;
+        if (l < heapSize && arr[l] > arr[largest])
+            largest = l;
+        if (r < heapSize && arr[r] > arr[largest])
+            largest = r;
+        if (largest != i) {
+            int temp = arr[i];
+            arr[i] = arr[largest];
+            arr[largest] = temp;
+            MaxHeapify(largest);
+        }
+    }
+
+    void removeMax() {
+        if (heapSize <= 0) {
+            System.out.println("Heap is empty");
+            return;
+        }
+        if (heapSize == 1) {
+            heapSize--;
+            return;
+        }
+
+        arr[0] = arr[heapSize - 1];
+        heapSize--;
+        MaxHeapify(0);
+    }
+
+    int getMax(){
+        return arr[0];
+    }
+
+    int curSize() {
+        return heapSize;
+    }
+
+    void insertKey(int x) {
+        if (heapSize == maxSize) {
+            System.out.println("\nOverflow: Could not insertKey\n");
+            return;
+        }
+
+        int i = heapSize;
+        arr[i] = x;
+        heapSize++;
+
+        while (i != 0 && arr[parent(i)] < arr[i]) {
+            int temp = arr[i];
+            arr[i] = arr[parent(i)];
+            arr[parent(i)] = temp;
+            i = parent(i);
+        }
+    }
+
+    void deleteKey(int key) {
+        int index = -1;
+        for (int i = 0; i < heapSize; i++) {
+            if (arr[i] == key) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == -1) {
+            System.out.println("Key not found in the heap.");
+            return;
+        }
+
+        // Replace with last element and reduce size
+        arr[index] = arr[heapSize - 1];
+        heapSize--;
+
+        // Restore heap property
+        MaxHeapify(index);
+        while (index != 0 && arr[parent(index)] < arr[index]) {
+            int temp = arr[index];
+            arr[index] = arr[parent(index)];
+            arr[parent(index)] = temp;
+            index = parent(index);
+        }
+    }
+
+    void displayHeap() {
+        System.out.print("Heap content: ");
+        for (int i = 0; i < heapSize; i++) {
+            System.out.print(arr[i] + " ");
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        MaxHeap h = new MaxHeap(15);
+        int elements[] = {3, 10, 12, 8, 2, 14};
+
+        for (int e : elements)
+            h.insertKey(e);
+
+        System.out.println("Initial Heap:");
+        h.displayHeap();
+
+        System.out.println("Max element: " + h.getMax());
+
+        h.removeMax();
+        System.out.println("\nAfter removing max:");
+        h.displayHeap();
+
+        h.insertKey(15);
+        h.insertKey(5);
+
+        System.out.println("\nAfter inserting 15 and 5:");
+        h.displayHeap();
+
+        System.out.println("\nDeleting element 8:");
+        h.deleteKey(8);
+        h.displayHeap();
+
+        System.out.println("Current Max: " + h.getMax());
+    }
 }
